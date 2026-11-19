@@ -97,3 +97,53 @@ DEFAULT_COLOR_PALETTE = [
     "#BAB0AC",
     "#EECA3B",
 ]
+
+# Limits to keep charts readable and fast
+MAX_CATEGORIES_IN_CHART = 20
+MAX_POINTS_IN_SCATTER = 5000
+
+# ---------------------------------------------------------------------------
+# Data analysis settings
+# ---------------------------------------------------------------------------
+CORRELATION_METHOD = "pearson"  # "pearson", "spearman" or "kendall"
+TOP_N_CATEGORIES = 10  # how many top values to show for text columns
+DECIMAL_PLACES = 2  # rounding for displayed numbers
+
+# A text column with more unique values than this share of rows
+# is treated as "high cardinality" (e.g. IDs, names)
+HIGH_CARDINALITY_RATIO = 0.5
+
+# Outlier detection
+OUTLIER_IQR_MULTIPLIER = 1.5
+OUTLIER_ZSCORE_THRESHOLD = 3.0
+
+# Percentiles shown in the statistical summary
+SUMMARY_PERCENTILES = [0.25, 0.50, 0.75]
+
+# Columns that look like dates are checked with these formats
+DATE_FORMATS = ["%Y-%m-%d", "%d-%m-%Y", "%m/%d/%Y", "%d/%m/%Y", "%Y/%m/%d"]
+
+# ---------------------------------------------------------------------------
+# Data cleaning settings
+# ---------------------------------------------------------------------------
+# Text values treated as missing data
+NULL_VALUES = ["", " ", "NA", "N/A", "n/a", "NaN", "nan", "NULL", "null", "None", "-"]
+
+# Drop a column automatically if more than this share of values is missing
+MISSING_COLUMN_THRESHOLD = 0.5  # 50%
+
+# Default strategies for filling missing values
+NUMERIC_FILL_STRATEGY = "median"  # "mean", "median", "mode" or "zero"
+CATEGORICAL_FILL_STRATEGY = "mode"  # "mode" or "unknown"
+CATEGORICAL_FILL_VALUE = "Unknown"
+
+# Default cleaning steps
+STRIP_WHITESPACE = True
+REMOVE_DUPLICATES = True
+STANDARDIZE_COLUMN_NAMES = True  # e.g. " Sales Amount " -> "sales_amount"
+
+# ---------------------------------------------------------------------------
+# Export settings
+# ---------------------------------------------------------------------------
+EXPORT_FORMATS = [".csv", ".xlsx"]
+DEFAULT_EXPORT_FILENAME = "excelIQ_cleaned_data"
