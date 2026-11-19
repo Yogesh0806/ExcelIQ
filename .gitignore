@@ -1,0 +1,26 @@
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+.env.*
+
+# Uploaded datasets
+uploads/
+data/
+*.xlsx
+*.xls
+*.csv
+
+# Generated reports
+reports/
+*.pdf
+
+# IDE
+.vscode/
