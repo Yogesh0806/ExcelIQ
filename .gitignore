@@ -1,3 +1,4 @@
+
 # Virtual environments
 venv/
 .venv/
@@ -5,22 +6,42 @@ env/
 
 # Python cache
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
 
-# Secrets
+# Environment variables and secrets
 .env
 .env.*
+!.env.example
 
-# Uploaded datasets
+# IDE settings
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.log
+
+# Uploaded/private datasets
 uploads/
-data/
+data/*
+!data/.gitkeep
 *.xlsx
 *.xls
 *.csv
 
 # Generated reports
-reports/
+reports/*
+!reports/.gitkeep
 *.pdf
 
-# IDE
-.vscode/
+# Test cache
+.pytest_cache/
+
+# Streamlit secrets
+.streamlit/secrets.toml
