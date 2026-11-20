@@ -97,20 +97,7 @@ KENDALL_MAX_ROWS = 20_000
 SHAPIRO_MAX_SAMPLE = 5_000
 MAX_INSIGHT_NUMERIC_COLUMNS = 60
 
-CSS_TOKENS = {
-    "__NAVY__": NAVY,
-    "__BLUE__": BLUE,
-    "__ROYAL__": ROYAL,
-    "__DEEP__": DEEP,
-    "__BLACK__": NEAR_BLACK,
-    "__BG__": PAGE_BG,
-    "__BORDER__": BORDER,
-    "__TEXT__": TEXT,
-    "__MUTED__": MUTED,
-    "__SUCCESS__": SUCCESS,
-    "__WARNING__": WARNING,
-    "__DANGER__": DANGER,
-}
+CSS_TOKENS = {"__NAVY__": NAVY,"__BLUE__": BLUE,"__ROYAL__": ROYAL,"__DEEP__": DEEP,"__BLACK__": NEAR_BLACK,"__BG__": PAGE_BG,"__BORDER__": BORDER,"__TEXT__": TEXT,"__MUTED__": MUTED,"__SUCCESS__": SUCCESS,"__WARNING__": WARNING,"__DANGER__": DANGER,}
 
 CSS_TEMPLATE = """
 <style>
@@ -250,8 +237,6 @@ footer { visibility: hidden; }
 .st-key-nav [data-testid="stButton"] { margin-bottom: -0.35rem; }
 </style>
 """
-
-
 def inject_css() -> None:
     """Add the custom styling used across the app."""
     css = CSS_TEMPLATE
@@ -266,15 +251,11 @@ def inject_css() -> None:
 def esc(value) -> str:
     """Escape text before placing it inside HTML."""
     return html.escape(str(value))
-
-
 def fmt_int(value) -> str:
     try:
         return f"{int(value):,}"
     except (TypeError, ValueError):
         return "—"
-
-
 def fmt_float(value, places: int | None = None) -> str:
     places = DECIMAL_PLACES if places is None else places
     try:
@@ -284,21 +265,15 @@ def fmt_float(value, places: int | None = None) -> str:
     if np.isnan(number) or np.isinf(number):
         return "—"
     return f"{number:,.{places}f}"
-
-
 def fmt_pct(value) -> str:
     text = fmt_float(value)
     return text if text == "—" else f"{text}%"
-
-
 def fmt_bytes(size: float) -> str:
     for unit in ("B", "KB", "MB", "GB"):
         if size < 1024 or unit == "GB":
             return f"{size:,.0f} {unit}" if unit == "B" else f"{size:,.1f} {unit}"
         size /= 1024
     return f"{size:,.1f} GB"
-
-
 def join_names(names, limit: int = 5) -> str:
     """Join column names into a readable sentence fragment."""
     names = [str(name) for name in names]
@@ -312,36 +287,8 @@ def join_names(names, limit: int = 5) -> str:
 # =============================================================================
 def get_default_state() -> dict:
     """Default values for all dataset-related session state."""
-    return {
-        "df_original": None,
-        "df_cleaned": None,
-        "cleaning_report": None,
-        "file_name": None,
-        "file_bytes": None,
-        "file_ext": None,
-        "file_signature": None,
-        "sheet_names": [],
-        "selected_sheet": None,
-        "load_error": None,
-        "active_source": "Original",
-        "dashboard_charts": [],
-        "dashboard_next_id": 1,
-        "calc_cache": {},
-        "export_payload": None,
-    }
-
-
-WORKSPACE_STATE_KEYS = (
-    "df_cleaned",
-    "cleaning_report",
-    "active_source",
-    "dashboard_charts",
-    "dashboard_next_id",
-    "calc_cache",
-    "export_payload",
-)
-
-
+    return {"df_original": None,"df_cleaned": None,"cleaning_report": None,"file_name": None,"file_bytes": None,"file_ext": None,"file_signature": None,"sheet_names": [],"selected_sheet": None,"load_error": None,"active_source": "Original","dashboard_charts": [],"dashboard_next_id": 1,"calc_cache": {},"export_payload": None,}
+WORKSPACE_STATE_KEYS = ("df_cleaned","cleaning_report","active_source","dashboard_charts","dashboard_next_id","calc_cache","export_payload",)
 def initialize_session_state() -> None:
     """Create any missing session state keys."""
     for key, value in get_default_state().items():
@@ -350,8 +297,6 @@ def initialize_session_state() -> None:
     st.session_state.setdefault("current_page", "Home")
     st.session_state.setdefault("uploader_key", 0)
     st.session_state.setdefault("flash", None)
-
-
 def persist_widget_state() -> None:
     """Keep widget values alive when their page is not shown (Streamlit would drop them)."""
     for key in list(st.session_state.keys()):
@@ -2182,8 +2127,6 @@ WORKFLOW_STEPS = [
     ("6", "Discover insights", "Get rule-based findings calculated from your data.", "Insights"),
     ("7", "Export results", "Download the original or cleaned data as CSV or Excel.", "Export"),
 ]
-
-
 def render_home() -> None:
     render_header("Home")
     st.markdown(
@@ -2249,11 +2192,7 @@ def render_home() -> None:
                         )
                     else:
                         st.caption("Use the sidebar uploader.")
-
-
-# ---------------------------------------------------------------------------
 # Data Overview
-# ---------------------------------------------------------------------------
 def render_data_overview() -> None:
     render_header("Data Overview", source_toggle=True)
     if not require_dataset():
@@ -2283,7 +2222,6 @@ def render_data_overview() -> None:
         shown = min(row_limit, len(df))
         note.caption(f"Showing the first {shown:,} of {len(df):,} rows.")
         show_table(df.head(row_limit))
-
     with columns_tab:
         category_options = sorted(summary["Category"].unique())
         selected = multi("Filter by column category", "ov_type_filter", category_options, category_options)
@@ -2301,7 +2239,6 @@ def render_data_overview() -> None:
                 "Unique Values": st.column_config.NumberColumn(format="%d"),
             },
         )
-
     with missing_tab:
         affected = summary[summary["Missing"] > 0].sort_values("Missing", ascending=False).reset_index(drop=True)
         if affected.empty:
@@ -2317,14 +2254,7 @@ def render_data_overview() -> None:
             )
             show_all = checkbox("Show all affected columns in the chart", "ov_show_all_missing", False)
             plotted = affected if show_all else affected.head(MAX_CATEGORIES_IN_CHART)
-            fig = px.bar(
-                plotted.iloc[::-1],
-                x="Missing %",
-                y="Column",
-                orientation="h",
-                hover_data={"Missing": True, "Non-Null": True},
-                color_discrete_sequence=[BLUE],
-            )
+            fig = px.bar(plotted.iloc[::-1],x="Missing %",y="Column",orientation="h",hover_data={"Missing": True, "Non-Null": True},color_discrete_sequence=[BLUE],)
             threshold = MISSING_COLUMN_THRESHOLD * 100
             if plotted["Missing %"].max() >= threshold * 0.5:
                 fig.add_vline(x=threshold, line_dash="dash", line_color=DANGER, annotation_text="high-missing threshold")
@@ -2367,11 +2297,7 @@ def render_data_overview() -> None:
             "Categories are detected from the data: Numeric, Categorical (few distinct values), "
             "Text (many distinct values), Date/Time (including dates stored as text), Boolean, Empty and Other."
         )
-
-
-# ---------------------------------------------------------------------------
 # Data Cleaning
-# ---------------------------------------------------------------------------
 def gather_cleaning_options() -> dict:
     """Read the cleaning settings from the widgets' stored values."""
     state = st.session_state
@@ -2390,8 +2316,6 @@ def gather_cleaning_options() -> dict:
         "convert_cols": state.get("clean_convert_cols", []),
         "convert_strict": state.get("clean_convert_strict", True),
     }
-
-
 def run_cleaning() -> None:
     """Apply the selected options to a copy of the original dataset."""
     original = st.session_state.df_original
@@ -2414,8 +2338,6 @@ def run_cleaning() -> None:
     st.session_state.calc_cache = {}
     st.session_state.export_payload = None
     set_flash("success", "Cleaning applied. The cleaned dataset is now the data source for the whole app. Your original data is unchanged.")
-
-
 def reset_cleaning() -> None:
     """Throw away the cleaned dataset and go back to the original."""
     st.session_state.df_cleaned = None
@@ -2424,8 +2346,6 @@ def reset_cleaning() -> None:
     st.session_state.calc_cache = {}
     st.session_state.export_payload = None
     set_flash("info", "Cleaned data was discarded. The original dataset is in use again.")
-
-
 def render_data_cleaning() -> None:
     render_header("Data Cleaning", source_toggle=True)
     if not require_dataset():
@@ -2549,11 +2469,7 @@ def render_data_cleaning() -> None:
             show_table(st.session_state.df_cleaned.head(count))
         with original_tab:
             show_table(original.head(st.session_state.get("clean_preview_rows", DEFAULT_PREVIEW_ROWS)))
-
-
-# ---------------------------------------------------------------------------
 # Analytics
-# ---------------------------------------------------------------------------
 def render_descriptive_statistics(source, df, groups) -> None:
     numeric = groups["numeric"]
     if not numeric:
@@ -2569,12 +2485,7 @@ def render_descriptive_statistics(source, df, groups) -> None:
     categorical = [c for c in groups["text"]]
     if categorical:
         section_title("Categorical and text columns")
-        show_table(
-            memo("categorical_stats", source, lambda: build_categorical_stats_table(df, categorical)),
-            hide_index=True,
-        )
-
-
+        show_table(memo("categorical_stats", source, lambda: build_categorical_stats_table(df, categorical)),hide_index=True,)
 def render_numeric_column_analysis(df, column) -> None:
     values = clean_numeric(df[column])
     if values.empty:
@@ -2603,7 +2514,6 @@ def render_numeric_column_analysis(df, column) -> None:
         show_chart(fig, key="plot_ana_box")
         if len(values) > MAX_BOX_POINTS:
             st.caption(f"Box plot uses a random sample of {MAX_BOX_POINTS:,} values.")
-
     detail_left, detail_right = st.columns(2)
     with detail_left:
         with st.container(border=True):
@@ -2638,8 +2548,6 @@ def render_numeric_column_analysis(df, column) -> None:
                 )
             else:
                 st.caption("Normality test not available (too few values or no variation).")
-
-
 def render_categorical_column_analysis(df, column) -> None:
     series = df[column]
     counts = series.value_counts(dropna=True)
@@ -2670,8 +2578,6 @@ def render_categorical_column_analysis(df, column) -> None:
         fig.update_layout(yaxis_title=None)
         style_figure(fig, f"Most frequent values in {column}", height=max(300, 30 * len(table) + 110))
         show_chart(fig, key="plot_ana_cat")
-
-
 def render_date_column_analysis(df, column) -> None:
     dates = parse_dates(df[column]).dropna()
     if dates.empty:
@@ -2691,8 +2597,6 @@ def render_date_column_analysis(df, column) -> None:
     fig = px.line(counts, x="Period", y="Records", markers=len(counts) <= 60, color_discrete_sequence=[BLUE])
     style_figure(fig, f"Records per {grain.lower()}", height=380)
     show_chart(fig, key="plot_ana_date")
-
-
 def render_column_analysis(df, types) -> None:
     columns = list(df.columns)
     column = select("Select a column", "ana_column", columns, format_func=lambda c: f"{c}  ({types[c]})")
@@ -2709,8 +2613,6 @@ def render_column_analysis(df, types) -> None:
         st.info(f"'{column}' has a data type ({df[column].dtype}) that is not supported for column analysis.")
     else:
         render_categorical_column_analysis(df, column)
-
-
 def render_correlation_analysis(source, df, groups) -> None:
     numeric = groups["numeric"]
     if len(numeric) < 2:
@@ -2743,8 +2645,6 @@ def render_correlation_analysis(source, df, groups) -> None:
         section_title("Strongest relationships")
         show_table(top_correlation_pairs(corr).round(DECIMAL_PLACES), hide_index=True)
     st.caption("Correlation measures how strongly two columns move together. It does not show that one causes the other.")
-
-
 def render_outlier_analysis(source, df, groups) -> None:
     numeric = groups["numeric"]
     if not numeric:
@@ -2782,7 +2682,6 @@ def render_outlier_analysis(source, df, groups) -> None:
         style_figure(fig, "Outlier percentage by column", height=max(300, 30 * len(plotted) + 120))
         show_chart(fig, key="plot_ana_outlier_bar")
     show_table(table.round(DECIMAL_PLACES), hide_index=True)
-
     section_title("Inspect a column")
     options = affected["Column"].tolist() or numeric
     column = select("Column", "ana_out_col", options)
@@ -2800,14 +2699,7 @@ def render_outlier_analysis(source, df, groups) -> None:
             pd.DataFrame({"Row": shown_outliers, column: values.loc[shown_outliers].to_numpy(), "Status": "Outlier"}),
         ]
     )
-    fig = px.scatter(
-        plot_data,
-        x="Row",
-        y=column,
-        color="Status",
-        color_discrete_map={"Normal": BLUE, "Outlier": DANGER},
-        opacity=DEFAULT_CHART_CONFIG["opacity"],
-    )
+    fig = px.scatter( plot_data,x="Row",y=column,color="Status",color_discrete_map={"Normal": BLUE, "Outlier": DANGER},opacity=DEFAULT_CHART_CONFIG["opacity"],)
     for bound in (lower, upper):
         if bound is not None and not np.isnan(bound):
             fig.add_hline(y=bound, line_dash="dash", line_color=MUTED)
@@ -2816,8 +2708,6 @@ def render_outlier_analysis(source, df, groups) -> None:
     if len(outlier_index):
         with st.expander(f"Rows containing outliers in '{column}' (first 100)"):
             show_table(df.loc[outlier_index].head(100))
-
-
 def render_analytics() -> None:
     render_header("Analytics", source_toggle=True)
     if not require_dataset():
@@ -2952,7 +2842,6 @@ def render_export() -> None:
     dataset_options = ["Original dataset"] + (["Cleaned dataset"] if has_cleaned() else [])
     formats = [f for f in EXPORT_FORMATS if f in EXPORT_LABELS] or [".csv"]
     stem = Path(st.session_state.file_name or "").stem or DEFAULT_EXPORT_FILENAME
-
     controls, preview = st.columns([2, 3])
     with controls:
         with st.container(border=True):
@@ -2964,7 +2853,6 @@ def render_export() -> None:
             file_format = select("Format", "exp_format", formats, format_func=lambda f: EXPORT_LABELS[f])
             st.session_state.setdefault("exp_filename", stem + ("_cleaned" if has_cleaned() and source == "Cleaned" else ""))
             filename = st.text_input("File name (without extension)", key="exp_filename")
-
             encoding = delimiter = sheet_name = None
             include_summary = False
             if file_format == ".csv":
@@ -2976,37 +2864,23 @@ def render_export() -> None:
                 st.session_state.setdefault("exp_sheet", st.session_state.selected_sheet or "Data")
                 sheet_name = sanitize_sheet_name(st.text_input("Sheet name", key="exp_sheet"))
                 include_summary = checkbox("Add a 'Column Summary' sheet", "exp_summary", False)
-
     df = get_df(source)
     clean_name = sanitize_filename(filename, DEFAULT_EXPORT_FILENAME)
     full_name = f"{clean_name}{file_format}"
     signature = (source, file_format, full_name, encoding, delimiter, sheet_name, include_summary, df.shape)
-
     with preview:
         with st.container(border=True):
             section_title("Selected data", f"{choice}: {df.shape[0]:,} rows × {df.shape[1]:,} columns")
             show_table(df.head(DEFAULT_PREVIEW_ROWS))
-
     with controls:
         if st.button("Prepare file", key="btn_prepare_export", type="primary", icon=":material/inventory_2:"):
             prepare_export(df, source, file_format, full_name, encoding, delimiter, sheet_name, include_summary, signature)
-
         payload = st.session_state.export_payload
         if payload and payload["signature"] == signature:
             st.success(f"Ready: {payload['file_name']} ({fmt_bytes(len(payload['data']))})")
-            st.download_button(
-                "Download file",
-                data=payload["data"],
-                file_name=payload["file_name"],
-                mime=payload["mime"],
-                key="btn_download_export",
-                icon=":material/download:",
-                type="primary",
-            )
+            st.download_button("Download file",data=payload["data"],file_name=payload["file_name"],mime=payload["mime"],key="btn_download_export",icon=":material/download:",type="primary",)
         elif payload:
             st.info("Settings changed. Click 'Prepare file' to build the file with the new settings.")
-
-
 def prepare_export(df, source, file_format, full_name, encoding, delimiter, sheet_name, include_summary, signature) -> None:
     """Build the export file and keep it in session state for the download button."""
     try:
@@ -3038,16 +2912,7 @@ def main() -> None:
     inject_css()
     persist_widget_state()
     render_sidebar()
-
-    renderers = {
-        "Home": render_home,
-        "Data Overview": render_data_overview,
-        "Data Cleaning": render_data_cleaning,
-        "Analytics": render_analytics,
-        "Dashboard": render_dashboard,
-        "Insights": render_insights,
-        "Export": render_export,
-    }
+    renderers = {"Home": render_home,"Data Overview": render_data_overview,"Data Cleaning": render_data_cleaning,"Analytics": render_analytics,"Dashboard": render_dashboard,"Insights": render_insights,"Export": render_export,}
     try:
         renderers[st.session_state.current_page]()
     except Exception as exc:  # last line of defense: show the problem without crashing the app
