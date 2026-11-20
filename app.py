@@ -3,25 +3,6 @@ app.py
 
 ExcelIQ - Automated Excel & CSV Analytics Dashboard Platform.
 
-Run with:
-    streamlit run app.py
-
-Sections of this file
-    1.  Imports and page setup
-    2.  Constants and styling
-    3.  Formatting helpers
-    4.  Session state
-    5.  File reading and validation
-    6.  Data helpers (types, metrics, summaries)
-    7.  Cleaning engine
-    8.  Analytics helpers (statistics, correlation, outliers)
-    9.  Chart helpers and dashboard builders
-    10. Insights engine
-    11. Export helpers
-    12. Reusable UI components
-    13. Sidebar
-    14. Pages (Home, Data Overview, Data Cleaning, Analytics, Dashboard, Insights, Export)
-    15. Main
 """
 
 # =============================================================================
@@ -42,56 +23,11 @@ import streamlit as st
 from scipy import stats as scipy_stats
 from streamlit.errors import StreamlitAPIException
 
-from config import (
-    APP_DESCRIPTION,
-    APP_ICON,
-    APP_NAME,
-    APP_TITLE,
-    APP_VERSION,
-    CATEGORICAL_FILL_STRATEGY,
-    CATEGORICAL_FILL_VALUE,
-    CHART_TYPES,
-    CORRELATION_METHOD,
-    CSV_DEFAULT_SEPARATOR,
-    CSV_ENCODINGS,
-    DATE_FORMATS,
-    DECIMAL_PLACES,
-    DEFAULT_CHART_CONFIG,
-    DEFAULT_COLOR_PALETTE,
-    DEFAULT_EXPORT_FILENAME,
-    DEFAULT_PREVIEW_ROWS,
-    EXPORT_FORMATS,
-    HIGH_CARDINALITY_RATIO,
-    MAX_CATEGORIES_IN_CHART,
-    MAX_POINTS_IN_SCATTER,
-    MAX_PREVIEW_ROWS,
-    MAX_UPLOAD_SIZE_BYTES,
-    MAX_UPLOAD_SIZE_MB,
-    MIN_PREVIEW_ROWS,
-    MISSING_COLUMN_THRESHOLD,
-    NULL_VALUES,
-    NUMERIC_FILL_STRATEGY,
-    OUTLIER_IQR_MULTIPLIER,
-    OUTLIER_ZSCORE_THRESHOLD,
-    PAGE_LAYOUT,
-    PREVIEW_ROW_OPTIONS,
-    REMOVE_DUPLICATES,
-    SIDEBAR_STATE,
-    STANDARDIZE_COLUMN_NAMES,
-    STREAMLIT_FILE_TYPES,
-    STRIP_WHITESPACE,
-    SUMMARY_PERCENTILES,
-    SUPPORTED_FILE_FORMATS,
-    TOP_N_CATEGORIES,
+from config import (APP_DESCRIPTION,APP_ICON,APP_NAME,APP_TITLE,APP_VERSION,CATEGORICAL_FILL_STRATEGY,CATEGORICAL_FILL_VALUE,CHART_TYPES,CORRELATION_METHOD,CSV_DEFAULT_SEPARATOR,CSV_ENCODINGS,DATE_FORMATS,DECIMAL_PLACES,DEFAULT_CHART_CONFIG,DEFAULT_COLOR_PALETTE,DEFAULT_EXPORT_FILENAME,DEFAULT_PREVIEW_ROWS,EXPORT_FORMATS,HIGH_CARDINALITY_RATIO,MAX_CATEGORIES_IN_CHART,MAX_POINTS_IN_SCATTER,MAX_PREVIEW_ROWS,MAX_UPLOAD_SIZE_BYTES,MAX_UPLOAD_SIZE_MB,MIN_PREVIEW_ROWS,MISSING_COLUMN_THRESHOLD,NULL_VALUES,NUMERIC_FILL_STRATEGY,OUTLIER_IQR_MULTIPLIER,OUTLIER_ZSCORE_THRESHOLD,PAGE_LAYOUT,PREVIEW_ROW_OPTIONS,REMOVE_DUPLICATES,SIDEBAR_STATE,STANDARDIZE_COLUMN_NAMES,STREAMLIT_FILE_TYPES,STRIP_WHITESPACE,SUMMARY_PERCENTILES,SUPPORTED_FILE_FORMATS,TOP_N_CATEGORIES,
 )
 
 # Must be the first Streamlit command
-st.set_page_config(
-    page_title=APP_TITLE,
-    page_icon=APP_ICON,
-    layout=PAGE_LAYOUT,
-    initial_sidebar_state=SIDEBAR_STATE,
-)
+st.set_page_config(page_title=APP_TITLE,page_icon=APP_ICON,layout=PAGE_LAYOUT,initial_sidebar_state=SIDEBAR_STATE,)
 
 # =============================================================================
 # 2. CONSTANTS AND STYLING
@@ -3117,7 +3053,5 @@ def main() -> None:
     except Exception as exc:  # last line of defense: show the problem without crashing the app
         st.error(f"Something went wrong while showing this page: {exc}")
         st.caption("Try another section, or remove and re-upload the dataset.")
-
-
 if __name__ == "__main__":
     main()
