@@ -373,21 +373,58 @@ def safe_numeric(df: pd.DataFrame, cols: List[str]) -> pd.DataFrame:
 # Plot helpers
 # ---------------------------------------------------------------------------
 def apply_chart_layout(fig: go.Figure, title: str = "") -> go.Figure:
+    # Safely read chart defaults from config.py
+    chart_cfg = getattr(cfg, "DEFAULT_CHART_CONFIG", {}) or {}
+
+    height = chart_cfg.get("height", 380)
+    margin = chart_cfg.get("margin", dict(l=40, r=30, t=50, b=40))
+    template = chart_cfg.get("template", "plotly_white")
+
+    palette = getattr(cfg, "DEFAULT_COLOR_PALETTE", None) or [
+        "#2F2FE4",
+        "#162E93",
+        "#091540",
+        "#4A90E2",
+        "#7B68EE",
+    ]
+
     fig.update_layout(
-        title=dict(text=title, font=dict(size=15, color=NEAR_BLACK)),
-        template="plotly_white",
-        height=cfg.DEFAULT_CHART_CONFIG["height"],
-        margin=cfg.DEFAULT_CHART_CONFIG["margin"],
+        title=dict(
+            text=title,
+            font=dict(size=15, color=NEAR_BLACK),
+        ),
+        template=template,
+        height=height,
+        margin=margin,
         paper_bgcolor="white",
         plot_bgcolor="white",
-        font=dict(family="Inter, system-ui, sans-serif", size=12, color=TEXT),
-        colorway=cfg.DEFAULT_COLOR_PALETTE,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
+        font=dict(
+            family="Inter, system-ui, sans-serif",
+            size=12,
+            color=TEXT,
+        ),
+        colorway=palette,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            x=0,
+        ),
     )
-    fig.update_xaxes(showgrid=True, gridcolor="#F1F5F9", zeroline=False)
-    fig.update_yaxes(showgrid=True, gridcolor="#F1F5F9", zeroline=False)
-    return fig
 
+    fig.update_xaxes(
+        showgrid=True,
+        gridcolor="#F1F5F9",
+        zeroline=False,
+    )
+
+    fig.update_yaxes(
+        showgrid=True,
+        gridcolor="#F1F5F9",
+        zeroline=False,
+    )
+
+    return fig
 
 def limit_categories(series: pd.Series, n: int = None) -> pd.Series:
     n = n or cfg.MAX_CATEGORIES_IN_CHART
